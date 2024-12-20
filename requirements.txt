@@ -1,0 +1,6 @@
+pandas~=2.2.3
+binance-futures-connector
+pytz~=2024.2
+pandas_ta
+numpy==1.26.4
+PyMySQL~=1.1.1
