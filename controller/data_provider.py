@@ -6,7 +6,7 @@ import pytz
 class DataProvider:
 
     @staticmethod
-    def fetch_historical_data(client, symbol, limit=50, interval='1m'):
+    def fetch_historical_data(client, symbol, limit=100, interval='1m'):
         # start_date = datetime.utcnow() - timedelta(days=20)  # Fetch data for the last 1 hour
         # start_time = int(start_date.timestamp() * 1000)
         klines = client.klines(symbol=symbol, interval=interval, limit=limit)

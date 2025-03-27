@@ -1,8 +1,8 @@
 db_config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
-    'database': 'viral_fever'
+    'password': 'root',
+    'database': 'mar_25_crypto'
 }
 
 instruments = [

@@ -1,9 +1,45 @@
-import pandas_ta as ta
-import pandas as pd
 import numpy as np
+import pandas as pd
+import pandas_ta as ta
 
 
 class TechnicalAnalysis:
+
+    def entry_exit_arrows(self, df, length=10):
+        # Initialize empty columns for the arrows
+        df['up_arrow'] = None
+        df['down_arrow'] = None
+
+        # Calculate highest and lowest values over the specified length
+        df['highest'] = df['high'].rolling(window=length).max()
+        df['lowest'] = df['low'].rolling(window=length).min()
+
+        # Initialize previous trend value
+        prev_trend = None
+
+        # Loop through the DataFrame and determine entry and exit points
+        for i in range(length, len(df)):
+            # Determine if the current high is equal or greater than the highest over the length
+            if df['high'].iloc[i] >= df['highest'].iloc[i]:
+                trend = True  # Uptrend
+            elif df['low'].iloc[i] <= df['lowest'].iloc[i]:
+                trend = False  # Downtrend
+            else:
+                trend = prev_trend  # Maintain the previous trend if no condition is met
+
+            # Check for trend change and mark arrows
+            if trend:
+                df.loc[i, 'up_arrow'] = True  # Up arrow position for uptrend
+                df.loc[i, 'down_arrow'] = None  # No down arrow in an uptrend
+            else:
+                df.loc[i, 'down_arrow'] = True  # Down arrow position for downtrend
+                df.loc[i, 'up_arrow'] = None  # No up arrow in a downtrend
+
+            # Update previous trend for the next iteration
+            prev_trend = trend
+
+        return df
+
 
     @staticmethod
     def calculate_atr(df, period=14):
@@ -14,7 +50,7 @@ class TechnicalAnalysis:
         atr = true_range.rolling(window=period).mean()
         return atr
 
-    def calculate_signals(self, df, a=1, c=1):
+    def calculate_signals(self, df, a=2, c=1):
         df['EMA_1'] = ta.ema(close=df['close'], length=1)
         df['atr'] = self.calculate_atr(df, period=c)
         df['nLoss'] = a * df['atr']
